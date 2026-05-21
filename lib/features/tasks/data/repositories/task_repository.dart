@@ -47,13 +47,13 @@ class TaskRepository {
           .get();
 
       final tasks = snapshot.docs.map((doc) => Task.fromFirestore(doc)).toList();
-      
+
       // Update local database with latest data
       for (final task in tasks) {
         _database.saveTask(TaskEntity.fromTask(task));
       }
-      
-      return tasks;
+
+      return _mergeWithUnsynced(tasks, userId);
     } catch (e) {
       debugPrint('Error fetching tasks from Firestore: $e');
       // Fallback to local database
@@ -105,18 +105,22 @@ class TaskRepository {
 
       for (final entity in unsyncedTasks) {
         final task = entity.toTask();
-        
+        final oldLocalId = task.id;
+
         try {
           if (task.id.isEmpty || task.id.startsWith('local_')) {
             // New task - create in Firestore
             final docRef = await _firestore
                 .collection('tasks')
                 .add(task.toFirestore());
-            
+
             final syncedTask = task.copyWith(
               id: docRef.id,
               synced: true,
             );
+            if (oldLocalId.startsWith('local_')) {
+              _database.deleteTask(oldLocalId);
+            }
             _database.saveTask(TaskEntity.fromTask(syncedTask));
           } else {
             // Existing task - update in Firestore
@@ -124,7 +128,7 @@ class TaskRepository {
                 .collection('tasks')
                 .doc(task.id)
                 .update(task.toFirestore());
-            
+
             final syncedTask = task.copyWith(synced: true);
             _database.saveTask(TaskEntity.fromTask(syncedTask));
           }
@@ -151,13 +155,13 @@ class TaskRepository {
           .get();
 
       final tasks = snapshot.docs.map((doc) => Task.fromFirestore(doc)).toList();
-      
+
       // Update local database
       for (final task in tasks) {
         _database.saveTask(TaskEntity.fromTask(task));
       }
-      
-      return tasks;
+
+      return _mergeWithUnsynced(tasks, userId);
     } catch (e) {
       debugPrint('Error refreshing tasks: $e');
       // Fallback to local
@@ -177,6 +181,20 @@ class TaskRepository {
   /// Get unsynced tasks count
   int getUnsyncedCount(String userId) {
     return _database.getUnsyncedTasks(userId).length;
+  }
+
+  /// Merges remote tasks with unsynced local-only tasks so offline work stays visible.
+  List<Task> _mergeWithUnsynced(List<Task> remoteTasks, String userId) {
+    final remoteIds = remoteTasks.map((t) => t.id).toSet();
+    final pendingLocal = _database
+        .getUnsyncedTasks(userId)
+        .map((e) => e.toTask())
+        .where((t) => !remoteIds.contains(t.id))
+        .toList();
+
+    final merged = [...remoteTasks, ...pendingLocal];
+    merged.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    return merged;
   }
 
   static String _localTaskId(String id) {

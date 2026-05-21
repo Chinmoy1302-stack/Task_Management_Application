@@ -114,7 +114,7 @@ class MyApp extends StatelessWidget {
               return GetBuilder<LanguageController>(
                 builder: (languageController) {
                   return MaterialApp.router(
-                    title: 'Task Manager',
+                    title: 'TaskFlow',
                     debugShowCheckedModeBanner: false,
                     theme: AppTheme.getTheme(isDarkMode: isDark),
                     darkTheme: AppTheme.getTheme(isDarkMode: true),

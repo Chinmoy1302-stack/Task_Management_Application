@@ -114,7 +114,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           .where((task) => task.id != event.taskId)
           .toList();
 
-      emit(TaskLoaded(tasks: updatedTasks));
+      final userId =
+          previousTasks.isNotEmpty ? previousTasks.first.userId : '';
+      final unsyncedCount = userId.isNotEmpty
+          ? _taskRepository.getUnsyncedCount(userId)
+          : 0;
+
+      emit(TaskLoaded(tasks: updatedTasks, unsyncedCount: unsyncedCount));
     } catch (e) {
       emit(TaskError(e.toString()));
     }

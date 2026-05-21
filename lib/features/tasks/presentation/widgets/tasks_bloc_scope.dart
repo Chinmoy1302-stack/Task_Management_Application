@@ -26,11 +26,10 @@ class _TasksBlocScopeState extends State<TasksBlocScope> {
   @override
   void initState() {
     super.initState();
+    final taskRepository = TaskRepository(database: objectBox);
     _taskBloc = TaskBloc(
-      taskRepository: TaskRepository(database: objectBox),
-      syncService: SyncService(
-        taskRepository: TaskRepository(database: objectBox),
-      ),
+      taskRepository: taskRepository,
+      syncService: SyncService(taskRepository: taskRepository),
     );
     _loadTasksIfSignedIn();
     _authWorker = ever(

@@ -153,7 +153,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/weather_bg.png
+    - assets/images/app_logo.svg
 
   # Fonts
   fonts:

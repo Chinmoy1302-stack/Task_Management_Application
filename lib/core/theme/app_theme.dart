@@ -8,15 +8,15 @@ class AppTheme {
 
   static ThemeData getTheme({bool isDarkMode = false}) {
     final background =
-        isDarkMode ? const Color(0xFF12121A) : const Color(0xFFF5F6FA);
+        isDarkMode ? const Color(0xFF0F1117) : const Color(0xFFF8FAFC);
     final surface =
-        isDarkMode ? const Color(0xFF1C1C28) : const Color(0xFFFFFFFF);
+        isDarkMode ? const Color(0xFF1A1D27) : const Color(0xFFFFFFFF);
     final textPrimary =
-        isDarkMode ? const Color(0xFFF3F4F8) : const Color(0xFF1A1D26);
+        isDarkMode ? const Color(0xFFF1F5F9) : const Color(0xFF0F172A);
     final textSecondary =
-        isDarkMode ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
+        isDarkMode ? const Color(0xFF94A3B8) : const Color(0xFF64748B);
     final border =
-        isDarkMode ? const Color(0xFF2E2E3D) : const Color(0xFFE2E5EE);
+        isDarkMode ? const Color(0xFF2D3348) : const Color(0xFFE2E8F0);
 
     return ThemeData(
       useMaterial3: true,
