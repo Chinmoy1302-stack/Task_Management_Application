@@ -7,8 +7,17 @@ class ConnectivityService {
 
   final Connectivity _connectivity;
 
+  /// Emits whenever the device connectivity changes.
+  Stream<List<ConnectivityResult>> get onConnectivityChanged =>
+      _connectivity.onConnectivityChanged;
+
   Future<bool> get isOffline async {
     final results = await _connectivity.checkConnectivity();
-    return results.contains(ConnectivityResult.none) || results.isEmpty;
+    return isOfflineFromResults(results);
+  }
+
+  bool isOfflineFromResults(List<ConnectivityResult> results) {
+    if (results.isEmpty) return true;
+    return results.every((result) => result == ConnectivityResult.none);
   }
 }

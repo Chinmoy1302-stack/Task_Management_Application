@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import '../../features/tasks/data/models/task_entity.dart';
@@ -22,27 +23,27 @@ class ObjectBoxService {
 
   /// Save or update a task in local database
   void saveTask(TaskEntity task) {
-    // Check if task with same firestoreId already exists
-    if (task.firestoreId.isNotEmpty) {
-      final existing = getTask(task.firestoreId);
-      if (existing != null && existing.id != task.id) {
-        // Update the task to use the existing entity's ID
-        final updatedTask = TaskEntity(
-          id: existing.id,
-          firestoreId: task.firestoreId,
-          title: task.title,
-          description: task.description,
-          status: task.status,
-          createdAt: task.createdAt,
-          updatedAt: task.updatedAt,
-          userId: task.userId,
-          synced: task.synced,
-        );
-        taskBox.put(updatedTask);
-        return;
+    try {
+      if (task.firestoreId.isNotEmpty) {
+        final existing = getTask(task.firestoreId);
+        if (existing != null) {
+          // Update existing entity to preserve ObjectBox ID
+          taskBox.put(task.copyWith(id: existing.id));
+          return;
+        }
+      }
+      // Save new entity
+      taskBox.put(task);
+    } catch (e) {
+      // If unique constraint violation, try to find and update existing
+      debugPrint('ObjectBox save error: $e');
+      if (task.firestoreId.isNotEmpty) {
+        final existing = getTask(task.firestoreId);
+        if (existing != null) {
+          taskBox.put(task.copyWith(id: existing.id));
+        }
       }
     }
-    taskBox.put(task);
   }
 
   /// Get a task by Firestore ID

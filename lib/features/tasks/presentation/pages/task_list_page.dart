@@ -20,31 +20,15 @@ class TaskListPage extends StatefulWidget {
 }
 
 class _TaskListPageState extends State<TaskListPage> {
-  bool _wasOffline = false;
-
   String get _userId =>
       Get.find<AuthController>().firebaseUser.value?.uid ?? '';
 
-  void _reloadTasks(BuildContext context) {
-    final userId = _userId;
-    if (userId.isNotEmpty) {
-      context.read<TaskBloc>().add(LoadTasksEvent(userId: userId));
-    }
-  }
-
-  void _onConnectivityChanged(bool isOffline, BuildContext context) {
-    if (_wasOffline && !isOffline && _userId.isNotEmpty) {
-      context.read<TaskBloc>().add(SyncTasksEvent(_userId));
-      AppToast.showSuccess('Back online — syncing tasks');
-    }
-    _wasOffline = isOffline;
-  }
-
   Future<void> _navigateTo(BuildContext context, String path) async {
+    final bloc = context.read<TaskBloc>();
+    final userId = _userId;
     await context.push(path);
-    if (mounted) {
-      _reloadTasks(context);
-    }
+    if (!mounted || userId.isEmpty) return;
+    bloc.add(LoadTasksEvent(userId: userId));
   }
 
   @override
@@ -56,13 +40,10 @@ class _TaskListPageState extends State<TaskListPage> {
         Widget child,
       ) {
         final bool isOffline =
-            connectivity.contains(ConnectivityResult.none);
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            _onConnectivityChanged(isOffline, context);
-          }
-        });
+            connectivity.isEmpty ||
+            connectivity.every(
+              (result) => result == ConnectivityResult.none,
+            );
 
         return Scaffold(
           backgroundColor: AppColors.background,

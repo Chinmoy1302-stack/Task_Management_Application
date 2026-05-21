@@ -28,7 +28,13 @@ class TaskRepository {
       id: _localTaskId(task.id),
       synced: false,
     );
+    
+    debugPrint('Creating task - saving to ObjectBox with ID: ${pendingTask.id}');
     _database.saveTask(TaskEntity.fromTask(pendingTask));
+    
+    // Verify save
+    final saved = _database.getTask(pendingTask.id);
+    debugPrint('Task saved to ObjectBox: ${saved != null} (ID: ${saved?.firestoreId})');
 
     if (await _connectivity.isOffline) {
       debugPrint('Offline: task saved locally (${pendingTask.id})');
@@ -36,14 +42,23 @@ class TaskRepository {
     }
 
     try {
+      debugPrint('Online: attempting to sync task to Firestore');
       final docRef = await _firestore
           .collection('tasks')
           .add(task.toFirestore())
           .timeout(_firestoreTimeout);
 
+      debugPrint('Task synced to Firestore with ID: ${docRef.id}');
       final syncedTask = task.copyWith(id: docRef.id, synced: true);
+      
+      // Delete the local pending version
+      debugPrint('Deleting local pending task: ${pendingTask.id}');
       _database.deleteTask(pendingTask.id);
+      
+      // Save the synced version
+      debugPrint('Saving synced task with Firestore ID: ${docRef.id}');
       _database.saveTask(TaskEntity.fromTask(syncedTask));
+      
       return syncedTask;
     } catch (e) {
       debugPrint('Error creating task in Firestore: $e');
@@ -54,8 +69,9 @@ class TaskRepository {
   /// Get all tasks for a user from Firestore (local DB when offline).
   Future<List<Task>> getTasks(String userId) async {
     if (await _connectivity.isOffline) {
-      final localTasks = _database.getUserTasks(userId);
-      return localTasks.map((entity) => entity.toTask()).toList();
+      return _dedupeTasks(
+        _database.getUserTasks(userId).map((entity) => entity.toTask()).toList(),
+      );
     }
 
     try {
@@ -75,9 +91,9 @@ class TaskRepository {
       return _mergeWithUnsynced(tasks, userId);
     } catch (e) {
       debugPrint('Error fetching tasks from Firestore: $e');
-      // Fallback to local database
-      final localTasks = _database.getUserTasks(userId);
-      return localTasks.map((entity) => entity.toTask()).toList();
+      return _dedupeTasks(
+        _database.getUserTasks(userId).map((entity) => entity.toTask()).toList(),
+      );
     }
   }
 
@@ -167,14 +183,33 @@ class TaskRepository {
     } catch (e) {
       debugPrint('Error during sync: $e');
       return 0;
+    } finally {
+      _cleanupDuplicateLocalTasks(userId);
+    }
+  }
+
+  /// Removes stale local-only rows that already exist on the remote side.
+  void _cleanupDuplicateLocalTasks(String userId) {
+    final syncedTasks = _database
+        .getUserTasks(userId)
+        .where((entity) => entity.synced)
+        .map((entity) => entity.toTask())
+        .toList();
+
+    for (final entity in _database.getUnsyncedTasks(userId)) {
+      final task = entity.toTask();
+      if (_isDuplicateOfRemote(task, syncedTasks)) {
+        _database.deleteTask(task.id);
+      }
     }
   }
 
   /// Refresh tasks from Firestore (pull latest changes)
   Future<List<Task>> refreshTasks(String userId) async {
     if (await _connectivity.isOffline) {
-      final localTasks = _database.getUserTasks(userId);
-      return localTasks.map((entity) => entity.toTask()).toList();
+      return _dedupeTasks(
+        _database.getUserTasks(userId).map((entity) => entity.toTask()).toList(),
+      );
     }
 
     try {
@@ -194,9 +229,9 @@ class TaskRepository {
       return _mergeWithUnsynced(tasks, userId);
     } catch (e) {
       debugPrint('Error refreshing tasks: $e');
-      // Fallback to local
-      final localTasks = _database.getUserTasks(userId);
-      return localTasks.map((entity) => entity.toTask()).toList();
+      return _dedupeTasks(
+        _database.getUserTasks(userId).map((entity) => entity.toTask()).toList(),
+      );
     }
   }
 
@@ -220,11 +255,36 @@ class TaskRepository {
         .getUnsyncedTasks(userId)
         .map((e) => e.toTask())
         .where((t) => !remoteIds.contains(t.id))
+        .where((t) => !_isDuplicateOfRemote(t, remoteTasks))
         .toList();
 
-    final merged = [...remoteTasks, ...pendingLocal];
-    merged.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-    return merged;
+    return _dedupeTasks([...remoteTasks, ...pendingLocal]);
+  }
+
+  /// Prevents duplicate rows when local pending tasks were already synced remotely.
+  bool _isDuplicateOfRemote(Task local, List<Task> remoteTasks) {
+    return remoteTasks.any(
+      (remote) =>
+          remote.userId == local.userId &&
+          remote.title == local.title &&
+          remote.description == local.description &&
+          remote.createdAt.millisecondsSinceEpoch ==
+              local.createdAt.millisecondsSinceEpoch,
+    );
+  }
+
+  List<Task> _dedupeTasks(List<Task> tasks) {
+    final seenIds = <String>{};
+    final deduped = <Task>[];
+
+    for (final task in tasks) {
+      if (seenIds.add(task.id)) {
+        deduped.add(task);
+      }
+    }
+
+    deduped.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    return deduped;
   }
 
   static String _localTaskId(String id) {

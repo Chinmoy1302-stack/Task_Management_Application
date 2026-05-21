@@ -61,12 +61,11 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
       emit(TaskLoading(tasks: previousTasks));
 
-      final createdTask = await _taskRepository.createTask(event.task);
-      final updatedTasks = [createdTask, ...previousTasks];
-
+      await _taskRepository.createTask(event.task);
+      final tasks = await _taskRepository.getTasks(event.task.userId);
       final unsyncedCount = _taskRepository.getUnsyncedCount(event.task.userId);
 
-      emit(TaskLoaded(tasks: updatedTasks, unsyncedCount: unsyncedCount));
+      emit(TaskLoaded(tasks: tasks, unsyncedCount: unsyncedCount));
 
       NotificationService().showTaskCreatedNotification(event.task.title);
     } catch (e) {
