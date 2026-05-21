@@ -26,7 +26,7 @@ import 'core/services/google_sign_in_service.dart';
 import 'core/services/notification_service.dart';
 import 'i18n/strings.g.dart';
 
-//add
+//add all services here
 late ObjectBoxService objectBox;
 
 Future<void> main() async {
