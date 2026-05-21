@@ -57,14 +57,17 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
         ? (bloc.state as TaskLoaded).tasks.length
         : 0;
 
-    bloc.add(CreateTaskEvent(task));
-
     try {
-      final state = await bloc.stream.firstWhere((s) {
-        if (s is TaskError) return true;
-        if (s is TaskLoaded && s.tasks.length > countBefore) return true;
-        return false;
-      });
+      final stateFuture = bloc.stream
+          .where((s) => s is TaskLoaded || s is TaskError)
+          .first
+          .timeout(
+            const Duration(seconds: 20),
+            onTimeout: () => bloc.state,
+          );
+
+      bloc.add(CreateTaskEvent(task));
+      final state = await stateFuture;
 
       if (!context.mounted) return;
 
@@ -73,7 +76,23 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
         return;
       }
 
-      AppToast.showSuccess('Task created');
+      if (state is! TaskLoaded) {
+        AppToast.showError('Failed to create task', description: 'Timed out');
+        return;
+      }
+
+      if (state.tasks.length <= countBefore &&
+          !state.tasks.any((t) => t.title == task.title)) {
+        AppToast.showError('Failed to create task');
+        return;
+      }
+
+      final isOfflineTask = state.tasks.any(
+        (t) => t.title == task.title && !t.synced,
+      );
+      AppToast.showSuccess(
+        isOfflineTask ? 'Task saved offline' : 'Task created',
+      );
       context.pop();
     } finally {
       if (mounted) {

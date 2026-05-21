@@ -2,43 +2,62 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import '../../data/models/task.dart';
 import '../../data/models/task_entity.dart';
+import '../../../../core/services/connectivity_service.dart';
 import '../../../../core/services/objectbox_service.dart';
 
 class TaskRepository {
   final FirebaseFirestore _firestore;
   final ObjectBoxService _database;
+  final ConnectivityService _connectivity;
+
+  static const Duration _firestoreTimeout = Duration(seconds: 8);
 
   TaskRepository({
     FirebaseFirestore? firestore,
     required ObjectBoxService database,
+    ConnectivityService? connectivity,
   })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _database = database;
+        _database = database,
+        _connectivity = connectivity ?? ConnectivityService();
 
   // ==================== Firestore Operations ====================
 
-  /// Create a new task in Firestore
+  /// Create a task — saves locally first so offline creation always works.
   Future<Task> createTask(Task task) async {
+    final pendingTask = task.copyWith(
+      id: _localTaskId(task.id),
+      synced: false,
+    );
+    _database.saveTask(TaskEntity.fromTask(pendingTask));
+
+    if (await _connectivity.isOffline) {
+      debugPrint('Offline: task saved locally (${pendingTask.id})');
+      return pendingTask;
+    }
+
     try {
-      final docRef = await _firestore.collection('tasks').add(task.toFirestore());
-      final createdTask = task.copyWith(id: docRef.id, synced: true);
-      
-      // Also save to local database
-      _database.saveTask(TaskEntity.fromTask(createdTask));
-      
-      return createdTask;
+      final docRef = await _firestore
+          .collection('tasks')
+          .add(task.toFirestore())
+          .timeout(_firestoreTimeout);
+
+      final syncedTask = task.copyWith(id: docRef.id, synced: true);
+      _database.deleteTask(pendingTask.id);
+      _database.saveTask(TaskEntity.fromTask(syncedTask));
+      return syncedTask;
     } catch (e) {
       debugPrint('Error creating task in Firestore: $e');
-      final localTask = task.copyWith(
-        id: _localTaskId(task.id),
-        synced: false,
-      );
-      _database.saveTask(TaskEntity.fromTask(localTask));
-      return localTask;
+      return pendingTask;
     }
   }
 
-  /// Get all tasks for a user from Firestore
+  /// Get all tasks for a user from Firestore (local DB when offline).
   Future<List<Task>> getTasks(String userId) async {
+    if (await _connectivity.isOffline) {
+      final localTasks = _database.getUserTasks(userId);
+      return localTasks.map((entity) => entity.toTask()).toList();
+    }
+
     try {
       final snapshot = await _firestore
           .collection('tasks')
@@ -62,23 +81,29 @@ class TaskRepository {
     }
   }
 
-  /// Update a task in Firestore
+  /// Update a task — queues locally when offline or task is still local-only.
   Future<Task> updateTask(Task task) async {
+    final localTask = task.copyWith(synced: false);
+    _database.saveTask(TaskEntity.fromTask(localTask));
+
+    final isLocalOnly = task.id.isEmpty || task.id.startsWith('local_');
+    if (await _connectivity.isOffline || isLocalOnly) {
+      debugPrint('Offline/local update saved (${localTask.id})');
+      return localTask;
+    }
+
     try {
       await _firestore
           .collection('tasks')
           .doc(task.id)
-          .update(task.toFirestore());
-      
+          .update(task.toFirestore())
+          .timeout(_firestoreTimeout);
+
       final updatedTask = task.copyWith(synced: true);
       _database.saveTask(TaskEntity.fromTask(updatedTask));
-      
       return updatedTask;
     } catch (e) {
       debugPrint('Error updating task in Firestore: $e');
-      // Save locally with synced=false
-      final localTask = task.copyWith(synced: false);
-      _database.saveTask(TaskEntity.fromTask(localTask));
       return localTask;
     }
   }
@@ -147,6 +172,11 @@ class TaskRepository {
 
   /// Refresh tasks from Firestore (pull latest changes)
   Future<List<Task>> refreshTasks(String userId) async {
+    if (await _connectivity.isOffline) {
+      final localTasks = _database.getUserTasks(userId);
+      return localTasks.map((entity) => entity.toTask()).toList();
+    }
+
     try {
       final snapshot = await _firestore
           .collection('tasks')
