@@ -15,7 +15,6 @@ import 'core/theme/app_theme.dart';
 import 'core/navigation/app_router.dart';
 import 'core/navigation/navigation_helper.dart';
 import 'core/theme/app_theme_type.dart';
-
 import 'features/auth/presentation/controllers/auth_controller.dart';
 import 'features/onboarding/presentation/controllers/onboarding_controller.dart';
 import 'core/theme/theme_controller.dart';
