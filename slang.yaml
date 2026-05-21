@@ -1,0 +1,3 @@
+# Slang configuration
+# Disable deferred loading for translations to avoid runtime loading issues
+lazy: false

@@ -1,0 +1,82 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "2:7366805147649328520",
+      "lastPropertyId": "9:1374050330841847532",
+      "name": "TaskEntity",
+      "properties": [
+        {
+          "id": "1:1546479582417592106",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7193866667644579123",
+          "name": "firestoreId",
+          "indexId": "2:331331739192894523",
+          "type": 9,
+          "flags": 2080
+        },
+        {
+          "id": "3:1937938052048041763",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "4:3573549195411987818",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "5:6247520378560675390",
+          "name": "status",
+          "type": 9
+        },
+        {
+          "id": "6:4594475964990200450",
+          "name": "createdAt",
+          "type": 6
+        },
+        {
+          "id": "7:3863198191512429629",
+          "name": "updatedAt",
+          "type": 6
+        },
+        {
+          "id": "8:6215239838041161977",
+          "name": "userId",
+          "type": 9
+        },
+        {
+          "id": "9:1374050330841847532",
+          "name": "synced",
+          "type": 1
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:7366805147649328520",
+  "lastIndexId": "2:331331739192894523",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [
+    397800334642971565
+  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    2584343409328265443,
+    5555398779613965564,
+    7393771419907871980,
+    8384074433482636494,
+    1954735622199091548
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

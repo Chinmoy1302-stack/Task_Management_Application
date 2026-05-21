@@ -1,0 +1,38 @@
+{
+  "auth": {
+    "providers": {
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "Assignment",
+        "supportEmail": "support@assignment.app"
+      }
+    }
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "task-63673",
+          "appId": "1:155162726583:android:2ee73d28b3790571603d32",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "task-63673",
+          "appId": "1:155162726583:ios:83015dfc9b787162603d32",
+          "uploadDebugSymbols": true,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "task-63673",
+          "configurations": {
+            "android": "1:155162726583:android:2ee73d28b3790571603d32",
+            "ios": "1:155162726583:ios:83015dfc9b787162603d32"
+          }
+        }
+      }
+    }
+  }
+}

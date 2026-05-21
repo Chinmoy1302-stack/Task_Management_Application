@@ -1,0 +1,193 @@
+name: task_management_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.10.3
+
+# =====================================================================
+# ENVIRONMENT VARIABLES (ENVied)
+# =====================================================================
+# ENVied reads environment variables from .env file at build time
+# and generates type-safe Dart code with obfuscation support.
+#
+# SETUP:
+#   1. Create .env file at project root with your secrets:
+#      API_KEY=your_api_key
+#      BASE_URL=https://api.example.com
+#
+#   2. Create env config file at lib/core/env/env.dart (already created)
+#
+#   3. Add .env and *.g.dart to .gitignore:
+#      echo ".env" >> .gitignore
+#      echo "*.g.dart" >> .gitignore
+#
+# COMMANDS:
+#   Generate env file (run once):
+#     dart run build_runner build --delete-conflicting-outputs
+#
+#   Watch mode (auto-regenerate on changes):
+#     dart run build_runner watch --delete-conflicting-outputs
+#
+#   Clean and rebuild:
+#     dart run build_runner clean && dart run build_runner build --delete-conflicting-outputs
+#
+# USAGE in code:
+#   import 'package:flutter_base_project/core/env/env.dart';
+#   print(Env.apiKey);
+#
+# DOCS: https://pub.dev/packages/envied
+# =====================================================================
+
+# =====================================================================
+# NETWORK LAYER (Dio + Cache + Retry)
+# =====================================================================
+# A modular network layer with caching and smart retry capabilities.
+#
+# COMPONENTS:
+#   - dio: Powerful HTTP client with interceptors support
+#   - dio_cache_plus: Enhanced caching with per-request control
+#   - dio_smart_retry: Automatic retry with exponential backoff
+#
+# FEATURES:
+#   - Token-based authentication with auto-refresh
+#   - Request/Response caching with configurable duration
+#   - Smart retry on network failures (408, 429, 500, 502, 503, 504)
+#   - Cancel token management per screen/feature
+#   - Comprehensive logging in debug mode
+#
+# USAGE:
+#   import 'package:flutter_base_project/core/network/network.dart';
+#
+#   // Create API instance
+#   final api = DioNetwork();
+#
+#   // Make requests with cancel token
+#   final token = CancelTokenManager().createToken('my_feature');
+#   final response = await api.get(
+#     endpoint: '/users',
+#     cancelToken: token,
+#     converter: (json) => User.fromJson(json),
+#   );
+#
+#   // Cancel on dispose
+#   CancelTokenManager().cancel('my_feature');
+#
+# DOCS:
+#   - https://pub.dev/packages/dio
+#   - https://pub.dev/packages/dio_cache_plus
+#   - https://pub.dev/packages/dio_smart_retry
+# =====================================================================
+
+dependencies:
+  flutter:
+    sdk: flutter
+  change_project_name: ^1.1.0
+  envied: ^1.3.2              # Environment variable annotations dart run build_runner build
+  
+  # Network Layer
+  dio: ^5.9.0                 # HTTP client with interceptors
+  dio_cache_plus: ^2.0.6      # Enhanced caching with per-request control
+  dio_smart_retry: ^7.0.1     # Smart retry with exponential backoff
+
+  # State Management
+  flutter_bloc: ^9.0.0
+  equatable: ^2.0.7
+
+  # Location & Permissions
+  geolocator: ^14.0.2
+  permission_handler: ^12.0.1
+
+  # Utilities & UI
+  intl: ^0.20.2
+  flutter_svg: ^2.0.17
+  google_fonts: ^6.2.1
+  cached_network_image: ^3.4.1
+  shared_preferences: ^2.5.2
+  
+  # Localization
+  slang: ^4.12.1
+  slang_flutter: ^4.12.1
+  flutter_localizations:
+    sdk: flutter
+  objectbox: ^5.1.0
+  objectbox_flutter_libs: ^5.1.0
+  path_provider: ^2.1.2
+  path: ^1.9.0
+
+  # Firebase
+  firebase_core: ^4.4.0              # Required for Firebase Analytics and Crashlytics
+  firebase_analytics: ^12.1.1        # Firebase Analytics
+  firebase_crashlytics: ^5.0.7       # Firebase Crashlytics
+  
+
+  # App Updates & Reviews
+  playx_version_update: ^1.0.1       # Version update with in-app updates
+  in_app_review: ^2.0.11             # In-app review prompts
+  get: ^4.7.3
+  go_router: ^14.8.1
+  firebase_auth: ^6.1.4
+  google_sign_in: ^7.2.0
+  sign_in_with_apple: ^7.0.1
+  pinput: ^6.0.2
+  image_picker: ^1.2.1
+  crypto: ^3.0.7
+  toastification: ^3.0.3
+  device_info_plus: ^12.3.0
+  firebase_messaging: ^16.1.1
+  flutter_offline: ^6.0.0
+  cloud_firestore: ^6.4.1
+  flutter_local_notifications: ^21.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.10.4
+  envied_generator: ^1.3.2    # Code generator for envied
+  objectbox_generator: ^5.1.0
+  slang_build_runner: ^4.12.1  # Optional: for build_runner support
+  package_rename: ^1.10.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/weather_bg.png
+
+  # Fonts
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato/Lato-Regular.ttf
+        - asset: assets/fonts/Lato/Lato-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Lato/Lato-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Lato/Lato-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Lato/Lato-BoldItalic.ttf
+          weight: 700
+          style: italic
+
+
+
+
+
+# Package Rename : Command : dart run package_rename
+package_rename_config:
+  android:
+    app_name: Task_Management
+    package_name: assignment.app
+    # override_old_package: com.example.example
+    lang: kotlin
+
+  ios:
+    app_name: Task_Management
+    bundle_name: Assignment
+    package_name: assignment.app
+
+# Project Rename 
+# dart pub global activate change_project_name
+# Command
+# change-project-name my_new_project

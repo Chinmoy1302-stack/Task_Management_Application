@@ -1,0 +1,173 @@
+{
+  "app": {
+    "name": "Flutter Base Project"
+  },
+  "navigation": {
+    "home": "Home",
+    "weather": "Weather",
+    "search": "Search",
+    "profile": "Profile"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to continue",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot Password?",
+      "loginButton": "Login",
+      "noAccount": "Don't have an account? ",
+      "signUp": "Sign Up",
+      "orContinue": "Or continue with"
+    },
+    "signup": {
+      "title": "Create Account",
+      "subtitle": "Sign up to get started",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "signupButton": "Sign Up",
+      "hasAccount": "Already have an account? ",
+      "login": "Login"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "subtitle": "Enter your email to receive a verification code",
+      "email": "Email",
+      "sendCode": "Send Code",
+      "otpSent": "OTP sent to {{email}}"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your new password below",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "updateButton": "Update Password"
+    },
+    "social": {
+      "google": "Google",
+      "apple": "Apple"
+    },
+    "errors": {
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "navigationError": "Navigation Error",
+      "navigationFailed": "Failed to navigate. Please try again.",
+      "error": "Error"
+    },
+    "success": {
+      "passwordUpdated": "Password updated successfully"
+    }
+  },
+  "onboarding": {
+    "otp": {
+      "title": "Verification Code",
+      "subtitle": "We have sent a OTP to {{email}}",
+      "fallbackEmail": "your email",
+      "verify": "Verify",
+      "invalidOtp": "Invalid OTP"
+    },
+    "profileCreation": {
+      "title": "Setup Profile",
+      "subtitle": "Tell us a bit about yourself",
+      "fullName": "Full Name",
+      "bio": "Bio",
+      "continue": "Continue",
+      "enterName": "Please enter your name"
+    },
+    "permissions": {
+      "title": "Permissions",
+      "subtitle": "To provide the best experience, we need a few permissions",
+      "camera": "Camera",
+      "cameraDescription": "Required to take photos for your profile.",
+      "gallery": "Gallery",
+      "galleryDescription": "Required to upload photos from your library.",
+      "location": "Location",
+      "locationDescription": "Required to show weather information.",
+      "grant": "Grant Permissions",
+      "skip": "Skip for now"
+    }
+  },
+  "home": {
+    "welcome": "Welcome Back",
+    "dashboardOverview": "Your dashboard overview",
+    "dashboard": "Dashboard",
+    "dashboardDescription": "View your activity and insights",
+    "dashboardPage": {
+      "title": "Dashboard",
+      "subtitle": "Your activity and insights will appear here"
+    },
+    "analytics": "Analytics",
+    "analyticsDescription": "Track your progress and trends",
+    "analyticsPage": {
+      "title": "Analytics",
+      "subtitle": "Track your progress and trends here"
+    },
+    "notifications": "Notifications",
+    "notificationsDescription": "Stay updated with latest news"
+  },
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "editProfileDescription": "Update your profile information here",
+    "settings": "Settings",
+    "settingsDescription": "Configure your app preferences here",
+    "notifications": "Notifications",
+    "helpSupport": "Help & Support",
+    "logout": "Logout"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Configure your app preferences",
+    "theme": "Theme",
+    "themeDescription": "Change app theme",
+    "language": "Language",
+    "languageDescription": "Change app language"
+  },
+  "theme": {
+    "selectTitle": "Select Theme",
+    "chooseTheme": "Choose your theme",
+    "selectSubtitle": "Select a theme to customize your app appearance",
+    "current": "Current",
+    "orange": "Orange",
+    "green": "Green"
+  },
+  "language": {
+    "selectTitle": "Select Language",
+    "selectSubtitle": "Choose your preferred language",
+    "english": "English",
+    "arabic": "Arabic",
+    "englishName": "English",
+    "arabicName": "العربية"
+  },
+  "search": {
+    "placeholder": "Search...",
+    "recentSearches": "Recent Searches",
+    "suggestions": "Suggestions",
+    "items": {
+      "weatherForecast": "Weather forecast",
+      "locationServices": "Location services",
+      "appSettings": "App settings",
+      "weather": "Weather",
+      "profile": "Profile",
+      "settings": "Settings"
+    }
+  },
+  "weather": {
+    "currentLocation": "CURRENT LOCATION",
+    "humidity": "HUMIDITY",
+    "wind": "WIND",
+    "feelsLike": "FEELS LIKE",
+    "fiveDayForecast": "5-DAY FORECAST",
+    "today": "Today",
+    "tryAgain": "Try Again",
+    "error": "Unknown error"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done"
+  }
+}

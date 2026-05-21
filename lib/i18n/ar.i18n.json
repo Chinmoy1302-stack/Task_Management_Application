@@ -1,0 +1,173 @@
+{
+  "app": {
+    "name": "مشروع Flutter الأساسي"
+  },
+  "navigation": {
+    "home": "الرئيسية",
+    "weather": "الطقس",
+    "search": "بحث",
+    "profile": "الملف الشخصي"
+  },
+  "auth": {
+    "login": {
+      "title": "مرحباً بعودتك",
+      "subtitle": "قم بتسجيل الدخول للمتابعة",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "loginButton": "تسجيل الدخول",
+      "noAccount": "ليس لديك حساب؟ ",
+      "signUp": "إنشاء حساب",
+      "orContinue": "أو المتابعة باستخدام"
+    },
+    "signup": {
+      "title": "إنشاء حساب",
+      "subtitle": "قم بالتسجيل للبدء",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "signupButton": "إنشاء حساب",
+      "hasAccount": "لديك حساب بالفعل؟ ",
+      "login": "تسجيل الدخول"
+    },
+    "forgotPassword": {
+      "title": "نسيت كلمة المرور",
+      "subtitle": "أدخل بريدك الإلكتروني لتلقي رمز التحقق",
+      "email": "البريد الإلكتروني",
+      "sendCode": "إرسال الرمز",
+      "otpSent": "تم إرسال رمز التحقق إلى {{email}}"
+    },
+    "resetPassword": {
+      "title": "إعادة تعيين كلمة المرور",
+      "subtitle": "أدخل كلمة المرور الجديدة أدناه",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmNewPassword": "تأكيد كلمة المرور الجديدة",
+      "updateButton": "تحديث كلمة المرور"
+    },
+    "social": {
+      "google": "جوجل",
+      "apple": "أبل"
+    },
+    "errors": {
+      "passwordMismatch": "كلمات المرور غير متطابقة",
+      "passwordTooShort": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+      "navigationError": "خطأ في التنقل",
+      "navigationFailed": "فشل التنقل. يرجى المحاولة مرة أخرى.",
+      "error": "خطأ"
+    },
+    "success": {
+      "passwordUpdated": "تم تحديث كلمة المرور بنجاح"
+    }
+  },
+  "onboarding": {
+    "otp": {
+      "title": "رمز التحقق",
+      "subtitle": "لقد أرسلنا رمز التحقق إلى {{email}}",
+      "fallbackEmail": "بريدك الإلكتروني",
+      "verify": "تحقق",
+      "invalidOtp": "رمز التحقق غير صحيح"
+    },
+    "profileCreation": {
+      "title": "إعداد الملف الشخصي",
+      "subtitle": "أخبرنا قليلاً عن نفسك",
+      "fullName": "الاسم الكامل",
+      "bio": "نبذة",
+      "continue": "متابعة",
+      "enterName": "يرجى إدخال اسمك"
+    },
+    "permissions": {
+      "title": "الأذونات",
+      "subtitle": "لتوفير أفضل تجربة، نحتاج إلى بعض الأذونات",
+      "camera": "الكاميرا",
+      "cameraDescription": "مطلوبة لالتقاط الصور للملف الشخصي.",
+      "gallery": "المعرض",
+      "galleryDescription": "مطلوبة لتحميل الصور من مكتبتك.",
+      "location": "الموقع",
+      "locationDescription": "مطلوبة لعرض معلومات الطقس.",
+      "grant": "منح الأذونات",
+      "skip": "تخطي الآن"
+    }
+  },
+  "home": {
+    "welcome": "مرحباً بعودتك",
+    "dashboardOverview": "نظرة عامة على لوحة التحكم",
+    "dashboard": "لوحة التحكم",
+    "dashboardDescription": "عرض نشاطك ورؤى",
+    "dashboardPage": {
+      "title": "لوحة التحكم",
+      "subtitle": "سيظهر نشاطك ورؤيتك هنا"
+    },
+    "analytics": "التحليلات",
+    "analyticsDescription": "تتبع تقدمك والاتجاهات",
+    "analyticsPage": {
+      "title": "التحليلات",
+      "subtitle": "تتبع تقدمك والاتجاهات هنا"
+    },
+    "notifications": "الإشعارات",
+    "notificationsDescription": "ابق على اطلاع بآخر الأخبار"
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "editProfile": "تعديل الملف الشخصي",
+    "editProfileDescription": "قم بتحديث معلومات ملفك الشخصي هنا",
+    "settings": "الإعدادات",
+    "settingsDescription": "قم بتكوين تفضيلات التطبيق هنا",
+    "notifications": "الإشعارات",
+    "helpSupport": "المساعدة والدعم",
+    "logout": "تسجيل الخروج"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "subtitle": "قم بتكوين تفضيلات التطبيق",
+    "theme": "المظهر",
+    "themeDescription": "تغيير مظهر التطبيق",
+    "language": "اللغة",
+    "languageDescription": "تغيير لغة التطبيق"
+  },
+  "theme": {
+    "selectTitle": "اختر المظهر",
+    "chooseTheme": "اختر مظهرك",
+    "selectSubtitle": "اختر مظهرًا لتخصيص مظهر التطبيق",
+    "current": "الحالي",
+    "orange": "برتقالي",
+    "green": "أخضر"
+  },
+  "language": {
+    "selectTitle": "اختر اللغة",
+    "selectSubtitle": "اختر لغتك المفضلة",
+    "english": "الإنجليزية",
+    "arabic": "العربية",
+    "englishName": "English",
+    "arabicName": "العربية"
+  },
+  "search": {
+    "placeholder": "بحث...",
+    "recentSearches": "عمليات البحث الأخيرة",
+    "suggestions": "الاقتراحات",
+    "items": {
+      "weatherForecast": "توقعات الطقس",
+      "locationServices": "خدمات الموقع",
+      "appSettings": "إعدادات التطبيق",
+      "weather": "الطقس",
+      "profile": "الملف الشخصي",
+      "settings": "الإعدادات"
+    }
+  },
+  "weather": {
+    "currentLocation": "الموقع الحالي",
+    "humidity": "الرطوبة",
+    "wind": "الرياح",
+    "feelsLike": "يشعر وكأنه",
+    "fiveDayForecast": "توقعات 5 أيام",
+    "today": "اليوم",
+    "tryAgain": "حاول مرة أخرى",
+    "error": "خطأ غير معروف"
+  },
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "back": "رجوع",
+    "next": "التالي",
+    "done": "تم"
+  }
+}
